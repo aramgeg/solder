@@ -33,7 +33,8 @@ class Worker(QObject):
         self.set_temp_slider_value=0
         self.data_len_prev= 0
         self.prev_set_temp= 0
-
+        ui.hot_gun_on_off.clicked.connect(self.button)
+        self.on_off_state = 1
     def work(self):
         while self.working:
             self.read_data()
@@ -65,8 +66,10 @@ class Worker(QObject):
     def update_data(self):
         self.set_temp_uart=str(self.set_temp_slider_value)
         self.set_air_speed_uart=str(self.set_air_speed_slider_value)
-        self.set_on_off_uart=str("1")
-        self.ser.write(str.encode(self.set_temp_uart+','+self.set_air_speed_uart+','+self.set_on_off_uart+'\r\n'))
+        self.set_on_off_uart=str(self.on_off_state)
+        print(self.set_on_off_uart)
+        self.ser.write(str.encode(self.set_temp_uart+','+self.set_air_speed_uart+','+ self.set_on_off_uart+'\r\n'))
+        #self.ser.write(str.encode(self.set_temp_uart+','+self.set_air_speed_uart+','+ '0' +'\r\n'))
         print("Updating values")
             #self.ser.write(str.encode('200,100,1\r\n'))
             #print(self.set_temp_slider_value)
@@ -74,6 +77,8 @@ class Worker(QObject):
 
     def display_data(self):
         self.values = self.data.split(",")
+
+        #print(int(self.values[3]))
         """
         if(self.prev_set_temp != float(self.values[0])):
             self.prev_set_temp=float(self.values[0])
@@ -81,10 +86,26 @@ class Worker(QObject):
             #ui.set_temp_slider.setValue(float(self.values[0]))
             print("Update set temp")
         """
+        if(int(self.values[3]) == 1):
+            ui.hot_gun_on_off.setText("On")
+            ui.hot_gun_on_off.setStyleSheet("background-color: green")
+        else:
+            ui.hot_gun_on_off.setText("Off")
+            ui.hot_gun_on_off.setStyleSheet("background-color: red")
+
         ui.set_temp.display(float(self.values[0]))
         ui.real_temp.display(float(self.values[1]))
         ui.fan_speed.display(float(self.values[2]))
 
+    def button(self):
+        print("Button pressed")
+        print(int(self.values[3]))
+        if(int(self.values[3]) == 1):
+            self.on_off_state = 0
+        else:
+            self.on_off_state = 1
+        self.update_data()
+        print(self.on_off_state)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -219,21 +240,9 @@ class Ui_Dialog(object):
         self.fan_speed.setObjectName("fan_speed")
         self.label_3 = QtWidgets.QLabel(self.splitter_3)
         self.label_3.setObjectName("label_3")        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        self.hot_gun_on_off = QtWidgets.QPushButton(Dialog)
+        self.hot_gun_on_off.setGeometry(QtCore.QRect(440, 10, 121, 41))
+        self.hot_gun_on_off.setObjectName("hot_gun_on_off")
 
         ports=self.available_serial_ports()
         for port in ports:
@@ -244,6 +253,7 @@ class Ui_Dialog(object):
         self.set_temp_slider.setTickPosition(QSlider.TicksBelow)
         self.set_temp_slider.setTickInterval(10)
         self.pushButton.clicked.connect(self.connect_serial_port)
+        #self.hot_gun_on_off.clicked.connect(self.on_off_button)
         self.fan_speed_slider.setRange(20, 100)
         self.fan_speed_slider.setTickPosition(QSlider.TicksBelow)
         self.fan_speed_slider.setTickInterval(5)
@@ -267,7 +277,8 @@ class Ui_Dialog(object):
     def updateLabel(self, value):
         self.fan_speed.display(value)
         print(value)
-
+    def on_off_button(self):
+        print("On off button")
 
     def recurring_timer(self):
         if self.serial_connected:
@@ -292,6 +303,7 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Set Temp"))
         self.groupBox_2.setTitle(_translate("Dialog", "Air Speed"))
         self.label_3.setText(_translate("Dialog", "Fan Speed"))
+        self.hot_gun_on_off.setText(_translate("Dialog", "On"))
 
     def connect_serial_port(self):
         #print(self.comboBox.currentText())

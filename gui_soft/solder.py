@@ -12,11 +12,17 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys, serial, serial.tools.list_ports, warnings
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 import glob
 import datetime
 #from serial import Serial
 import sys
 import time
+import numpy as np
+import random
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -35,10 +41,13 @@ class Worker(QObject):
         self.prev_set_temp= 0
         ui.hot_gun_on_off.clicked.connect(self.button)
         self.on_off_state = 1
+        self.set_temp_plot=[]
+        self.real_temp_plot=[]
     def work(self):
         while self.working:
             self.read_data()
             self.display_data()
+            self._update_canvas()
 
         self.finished.emit()
 
@@ -75,6 +84,24 @@ class Worker(QObject):
             #print(self.set_temp_slider_value)
         #time.sleep(0.2)
 
+    def _update_canvas(self):
+        self.set_temp_plot.append(float(self.values[0]))
+        self.real_temp_plot.append(float(self.values[1]))
+        plt.pause(0.002)
+        #global cnt
+        cnt=0
+        cnt+=1
+        if (cnt>50):
+            self.set_temp_plot.pop(0)
+            self.real_temp_plot.pop(0)
+        ui._dynamic_ax.clear()
+        #ax = self.figure.add_subplot(111)
+        ui._dynamic_ax.plot(self.set_temp_plot, '*-')
+        ui._dynamic_ax.plot(self.real_temp_plot, '*-')
+        ui._dynamic_ax.figure.canvas.draw()
+        
+
+
     def display_data(self):
         self.values = self.data.split(",")
 
@@ -110,7 +137,7 @@ class Worker(QObject):
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(575, 336)
+        Dialog.resize(575, 500)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../Pictures/Webcam/2020-07-01-203153.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
@@ -221,9 +248,6 @@ class Ui_Dialog(object):
 "}")
         self.fan_speed_slider.setOrientation(QtCore.Qt.Horizontal)
         self.fan_speed_slider.setObjectName("fan_speed_slider")
-        self.dial = QtWidgets.QDial(self.groupBox_2)
-        self.dial.setGeometry(QtCore.QRect(130, 70, 50, 64))
-        self.dial.setObjectName("dial")
         self.splitter_3 = QtWidgets.QSplitter(self.groupBox_2)
         self.splitter_3.setGeometry(QtCore.QRect(10, 30, 151, 41))
         self.splitter_3.setOrientation(QtCore.Qt.Horizontal)
@@ -237,6 +261,37 @@ class Ui_Dialog(object):
 "  color: rgb(255, 255, 255);\n"
 "}\n"
 "")
+
+        #self._main = QtWidgets.QWidget()
+        #self.setCentralWidget(self._main)
+        #layout = QtWidgets.QVBoxLayout(Dialog)
+
+        #static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        #layout.addWidget(static_canvas)
+        #self.addToolBar(NavigationToolbar(static_canvas, self))
+
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setGeometry(QtCore.QRect(10, 250, 700, 500))
+        self.widget.setObjectName("widget")
+        layout = QtWidgets.QVBoxLayout(self.widget)
+        dynamic_canvas = FigureCanvas(Figure(figsize=(1, 1)))
+        #dynamic_canvas.setGeometry(QtCore.QRect(440, 10, 121, 41))
+        layout.addWidget(dynamic_canvas)
+
+        #self.addToolBar(QtCore.Qt.BottomToolBarArea,
+        #                NavigationToolbar(dynamic_canvas, self))
+
+        #self._static_ax = static_canvas.figure.subplots()
+        #t = np.linspace(0, 10, 501)
+        #self._static_ax.plot(t, np.tan(t), ".")
+
+        self._dynamic_ax = dynamic_canvas.figure.subplots()
+        #self._dynamic_ax_2 = dynamic_canvas.figure.subplots()
+        #self._timer = dynamic_canvas.new_timer(
+        #    100, [(self._update_canvas, (), {})])
+        #self._timer.start()
+
+
         self.fan_speed.setObjectName("fan_speed")
         self.label_3 = QtWidgets.QLabel(self.splitter_3)
         self.label_3.setObjectName("label_3")        
@@ -273,27 +328,6 @@ class Ui_Dialog(object):
         self.datastring= ""
         self.serial_connected = False
         self.uart_port = ""
-
-    def updateLabel(self, value):
-        self.fan_speed.display(value)
-        print(value)
-    def on_off_button(self):
-        print("On off button")
-
-    def recurring_timer(self):
-        if self.serial_connected:
-            #self.counter+=1
-            self.values=[]
-            if self.ser.isOpen():
-                self.c = self.ser.read(size=1).decode("ASCII") #better ASCII
-                if(self.c =='\n'):
-                    self.values = self.datastring.split(",")
-                    self.datastring=""
-                else:
-                    self.datastring=self.datastring+self.c#.decode('utf-8')                
-                    #    datastring=""
-                print(self.values)
-                self.values=[]
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate

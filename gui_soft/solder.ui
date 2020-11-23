@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>575</width>
-    <height>336</height>
+    <width>703</width>
+    <height>342</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,52 +20,58 @@
   <property name="styleSheet">
    <string notr="true">background-color: rgb(156, 155, 96);</string>
   </property>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>101</width>
-     <height>25</height>
+     <width>681</width>
+     <height>321</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>10</y>
-     <width>71</width>
-     <height>25</height>
-    </rect>
+   <property name="currentIndex">
+    <number>0</number>
    </property>
-   <property name="text">
-    <string>Connect</string>
-   </property>
-  </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>221</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Hot Air</string>
-   </property>
-   <widget class="QSlider" name="set_temp_slider">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>201</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QSlider::groove:horizontal {
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>Main</string>
+    </attribute>
+    <widget class="QPushButton" name="hot_gun_on_off">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>10</y>
+       <width>121</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>On</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>221</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Hot Air</string>
+     </property>
+     <widget class="QSlider" name="set_temp_slider">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>201</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::groove:horizontal {
 border: 1px solid #999999;
 height: 18px;
 
@@ -92,26 +98,26 @@ border-bottom-right-radius: 0px;
 border-top-left-radius: 9px;
 border-bottom-left-radius: 9px;
 }</string>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QSplitter" name="splitter">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>191</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <widget class="QLCDNumber" name="real_temp">
-     <property name="styleSheet">
-      <string notr="true">QLCDNumber{
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QLCDNumber" name="set_temp">
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
   background-color: rgb(217, 214, 28);
   border: 2px solid rgb(113, 113, 113);
   border-width: 2px;
@@ -119,29 +125,29 @@ border-bottom-left-radius: 9px;
   color: rgb(255, 255, 255);
 }
 </string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Real Temp</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QSplitter" name="splitter_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>161</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <widget class="QLCDNumber" name="set_temp">
-     <property name="styleSheet">
-      <string notr="true">QLCDNumber{
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Set Temp</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QSplitter" name="splitter">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>191</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QLCDNumber" name="real_temp">
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
   background-color: rgb(217, 214, 28);
   border: 2px solid rgb(113, 113, 113);
   border-width: 2px;
@@ -149,38 +155,48 @@ border-bottom-left-radius: 9px;
   color: rgb(255, 255, 255);
 }
 </string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Real Temp</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>101</width>
+       <height>25</height>
+      </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Set Temp</string>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>50</y>
+       <width>231</width>
+       <height>201</height>
+      </rect>
      </property>
-    </widget>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>40</y>
-     <width>231</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Air Speed</string>
-   </property>
-   <widget class="QSlider" name="fan_speed_slider">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>211</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QSlider::groove:horizontal {
+     <property name="title">
+      <string>Air Speed</string>
+     </property>
+     <widget class="QSlider" name="fan_speed_slider">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>211</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::groove:horizontal {
 border: 1px solid #999999;
 height: 18px;
 
@@ -207,36 +223,36 @@ border-bottom-right-radius: 0px;
 border-top-left-radius: 9px;
 border-bottom-left-radius: 9px;
 }</string>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QDial" name="dial">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>70</y>
-      <width>50</width>
-      <height>64</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QSplitter" name="splitter_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <widget class="QLCDNumber" name="fan_speed">
-     <property name="styleSheet">
-      <string notr="true">QLCDNumber{
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QDial" name="dial">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>70</y>
+        <width>50</width>
+        <height>64</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSplitter" name="splitter_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QLCDNumber" name="fan_speed">
+       <property name="styleSheet">
+        <string notr="true">QLCDNumber{
   background-color: rgb(217, 214, 28);
   border: 2px solid rgb(113, 113, 113);
   border-width: 2px;
@@ -244,11 +260,54 @@ border-bottom-left-radius: 9px;
   color: rgb(255, 255, 255);
 }
 </string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Fan Speed</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>20</y>
+       <width>71</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Connect</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Plot</string>
+    </attribute>
+    <widget class="QWidget" name="widget" native="true">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>90</y>
+       <width>351</width>
+       <height>181</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="button_in_plot_tab">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>89</width>
+       <height>25</height>
+      </rect>
+     </property>
      <property name="text">
-      <string>Fan Speed</string>
+      <string>PushButton</string>
      </property>
     </widget>
    </widget>

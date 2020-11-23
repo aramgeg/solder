@@ -7,18 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>706</width>
-    <height>342</height>
+    <height>338</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Soldering Station</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../Pictures/Webcam/2020-07-01-203153.jpg</normaloff>../Pictures/Webcam/2020-07-01-203153.jpg</iconset>
+    <normaloff>image/icon.png</normaloff>image/icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(156, 155, 96);</string>
+   <string notr="true">background-image: url(&quot;/workspace/solder/gui_soft/soft/image/background.png&quot;); background-repeat: no-repeat; 
+background-position: center</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -29,8 +30,11 @@
      <height>321</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">selection-color: rgb(164, 0, 0);</string>
+   </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab_4">
     <attribute name="title">
@@ -44,6 +48,10 @@
        <width>121</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 10px;
+background-color: rgba(0, 0, 0,140);</string>
      </property>
      <property name="text">
       <string>On</string>
@@ -173,6 +181,9 @@ border-bottom-left-radius: 9px;
        <height>25</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 10px;</string>
+     </property>
     </widget>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
@@ -182,6 +193,9 @@ border-bottom-left-radius: 9px;
        <width>231</width>
        <height>201</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
      <property name="title">
       <string>Air Speed</string>
@@ -228,16 +242,6 @@ border-bottom-left-radius: 9px;
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
-     <widget class="QDial" name="dial">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>70</y>
-        <width>50</width>
-        <height>64</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QSplitter" name="splitter_3">
       <property name="geometry">
        <rect>
@@ -278,6 +282,9 @@ border-bottom-left-radius: 9px;
        <height>25</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">  border-radius: 10px;</string>
+     </property>
      <property name="text">
       <string>Connect</string>
      </property>
@@ -290,10 +297,10 @@ border-bottom-left-radius: 9px;
     <widget class="QWidget" name="widget" native="true">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>351</width>
-       <height>261</height>
+       <x>0</x>
+       <y>10</y>
+       <width>361</width>
+       <height>271</height>
       </rect>
      </property>
     </widget>
@@ -301,25 +308,25 @@ border-bottom-left-radius: 9px;
      <property name="geometry">
       <rect>
        <x>370</x>
-       <y>0</y>
+       <y>10</y>
        <width>301</width>
-       <height>151</height>
+       <height>171</height>
       </rect>
      </property>
      <property name="title">
-      <string>GroupBox</string>
+      <string>PID Correction</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>20</y>
-        <width>291</width>
-        <height>131</height>
+        <width>281</width>
+        <height>141</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="0">
         <widget class="QSplitter" name="pid_p_splitter">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -332,7 +339,18 @@ border-bottom-left-radius: 9px;
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
-         <widget class="QLCDNumber" name="pid_p_lcd"/>
+         <widget class="QLCDNumber" name="pid_p_lcd">
+          <property name="styleSheet">
+           <string notr="true">QLCDNumber{
+  background-color: rgb(217, 214, 28);
+  border: 2px solid rgb(113, 113, 113);
+  border-width: 2px;
+  border-radius: 10px;
+  color: rgb(255, 255, 255);
+}
+</string>
+          </property>
+         </widget>
          <widget class="QLabel" name="label_4">
           <property name="text">
            <string>Proportional</string>
@@ -340,17 +358,31 @@ border-bottom-left-radius: 9px;
          </widget>
         </widget>
        </item>
-       <item>
+       <item row="2" column="0">
         <widget class="QSplitter" name="pid_i_splitter">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <widget class="QSlider" name="pid_i_slider">
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
-         <widget class="QLCDNumber" name="pid_i_lcd"/>
+         <widget class="QLCDNumber" name="pid_i_lcd">
+          <property name="styleSheet">
+           <string notr="true">QLCDNumber{
+  background-color: rgb(217, 214, 28);
+  border: 2px solid rgb(113, 113, 113);
+  border-width: 2px;
+  border-radius: 10px;
+  color: rgb(255, 255, 255);
+}
+</string>
+          </property>
+         </widget>
          <widget class="QLabel" name="label_5">
           <property name="text">
            <string>Integral</string>
@@ -358,7 +390,7 @@ border-bottom-left-radius: 9px;
          </widget>
         </widget>
        </item>
-       <item>
+       <item row="0" column="0">
         <widget class="QSplitter" name="pid_d_splitter">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -368,7 +400,18 @@ border-bottom-left-radius: 9px;
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
-         <widget class="QLCDNumber" name="pid_d_lcd"/>
+         <widget class="QLCDNumber" name="pid_d_lcd">
+          <property name="styleSheet">
+           <string notr="true">QLCDNumber{
+  background-color: rgb(217, 214, 28);
+  border: 2px solid rgb(113, 113, 113);
+  border-width: 2px;
+  border-radius: 10px;
+  color: rgb(255, 255, 255);
+}
+</string>
+          </property>
+         </widget>
          <widget class="QLabel" name="label_6">
           <property name="text">
            <string>derivative</string>

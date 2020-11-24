@@ -51,6 +51,26 @@ int counter;
 bool on_off_state=true;
 bool air_or_temp_control=true;
 bool force_on_off_state = true;
+
+template <class T> int EEPROM_writeAnything(int ee, const T& value)
+{
+   const byte* p = (const byte*)(const void*)&value;
+   int i;
+   for (i = 0; i < sizeof(value); i++)
+       EEPROM.write(ee++, *p++);
+   return i;
+}
+
+template <class T> int EEPROM_readAnything(int ee, T& value)
+{
+   byte* p = (byte*)(void*)&value;
+   int i;
+   for (i = 0; i < sizeof(value); i++)
+       *p++ = EEPROM.read(ee++);
+   return i;
+}
+
+
 void setup_ports(){
   pinMode(heater, OUTPUT);
   pinMode(fan, OUTPUT);
@@ -68,10 +88,21 @@ void read_values_from_eeprom(){
   set_air_speed = EEPROM.read(0);
   set_temp = EEPROM.read(1)*2;
   
-  //Serial.print("Air_speed: ");
-  //Serial.println(set_air_speed);
-  //Serial.print("Set_temp: ");
-  //Serial.println(set_temp);
+  EEPROM_readAnything( 10, Kp);
+  EEPROM_readAnything( 20, Ki);
+  EEPROM_readAnything( 30, Kd);
+  /*
+  Serial.print("Air_speed: ");
+  Serial.println(set_air_speed);
+  Serial.print("Set_temp: ");
+  Serial.println(set_temp);
+  Serial.print("PID_P: ");
+  Serial.println(Kp);
+  Serial.print("PID_I: ");
+  Serial.println(Ki);
+  Serial.print("PID_D: ");
+  Serial.println(Kd);*/
+  myPID.SetTunings(Kp, Ki, Kd);
 }
 
 void setup() {
@@ -177,41 +208,79 @@ void handle_data_transmit(){
   Serial.print(",");
   Serial.print(set_air_speed);
   Serial.print(",");
-  Serial.println(on_off_state);
-
-  while(Serial.available()) {
-    String incoming_data= Serial.readString();
+  Serial.print(on_off_state);
+  //to be removed
+  Serial.print(",");
+  Serial.print(Kp);
+  Serial.print(",");
+  Serial.print(Ki);
+  Serial.print(",");
+  Serial.println(Kd);
+  //to be removed
+  
+  if(Serial.available()) {
+    String incoming_data = Serial.readStringUntil('\n');
     String _set_temp, _set_speed, _set_on_off;
+    String _pid_p,_pid_i,_pid_d,write_data;
     int soft_set_temp, soft_set_speed, soft_set_on_off;
+    float pid_p,pid_i,pid_d;
     _set_temp = getValue(incoming_data,',',0);
-    _set_speed = getValue(incoming_data,',',1);
-    _set_on_off = getValue(incoming_data,',',2);
-    soft_set_temp=_set_temp.toInt();
-    soft_set_speed=_set_speed.toInt();
-    soft_set_on_off=_set_on_off.toInt(); 
-    
-    if( set_temp_min <= soft_set_temp && soft_set_temp <= set_temp_max){
-      //Serial.println(soft_set_temp);
-      set_temp = soft_set_temp;
+    if(_set_temp == "pid"){
+      //Serial.println("Do pid correction");
+      _pid_p = getValue(incoming_data,',',1);
+      _pid_i = getValue(incoming_data,',',2);
+      _pid_d = getValue(incoming_data,',',3);
+      write_data = getValue(incoming_data,',',4);
+      Kp=_pid_p.toFloat();
+      Ki=_pid_i.toFloat();
+      Kd=_pid_d.toFloat();
+      myPID.SetTunings(Kp, Ki, Kd);
+      if(write_data == "write\r"){
+        //Serial.println("Save PID settings to eeprom");
+        EEPROM_writeAnything( 10, Kp);
+        EEPROM_writeAnything( 20, Ki);
+        EEPROM_writeAnything( 30, Kd);
+      }
+            
+      display_interval = 1000;
+      display.clear();
+      display.print("PID");
+      /*
+      Serial.println("Resp:");
+      Serial.println(pid_p);
+      Serial.println(pid_i);
+      Serial.println(pid_d);
+      Serial.println("Resp_end:");*/
     }else{
-      //Serial.println("Set_temp_error");
+      //Serial.println("Soft Control");
+      _set_speed = getValue(incoming_data,',',1);
+      _set_on_off = getValue(incoming_data,',',2);
+      soft_set_temp=_set_temp.toInt();
+      soft_set_speed=_set_speed.toInt();
+      soft_set_on_off=_set_on_off.toInt(); 
+      
+      if( set_temp_min <= soft_set_temp && soft_set_temp <= set_temp_max){
+        //Serial.println(soft_set_temp);
+        set_temp = soft_set_temp;
+      }else{
+        //Serial.println("Set_temp_error");
+      }
+  
+      if( set_air_speed_min <= soft_set_speed && soft_set_speed <= set_air_speed_max){
+        //Serial.println(set_air_speed);
+        set_air_speed = soft_set_speed;
+      }else{
+        //Serial.println("Set_air_speed_error");
+      }
+  
+      if(soft_set_on_off == 1){
+        //Serial.println("Turn on");
+        force_on_off_state = true;
+      }else{
+        force_on_off_state = false;
+        //Serial.println("Turn off");
+      }
     }
-
-    if( set_air_speed_min <= soft_set_speed && soft_set_speed <= set_air_speed_max){
-      //Serial.println(set_air_speed);
-      set_air_speed = soft_set_speed;
-    }else{
-      //Serial.println("Set_air_speed_error");
-    }
-
-    if(soft_set_on_off == 1){
-      //Serial.println("Turn on");
-      force_on_off_state = true;
-    }else{
-      force_on_off_state = false;
-      //Serial.println("Turn off");
-    }
-    
   }
 
 }

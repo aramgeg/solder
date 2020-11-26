@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from solder import Ui_Dialog
@@ -12,12 +13,12 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import glob
-import datetime
+#import datetime
 #from serial import Serial
-import sys
+#import sys
 import time
 import numpy as np
-import random
+#import random
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -50,26 +51,31 @@ class Worker(QObject):
         self.get_init_values()
 
     def get_init_values(self):
-        print("Get values inital values ")
-        try:
-            self.init_data = self.ser.readline().decode('utf-8')
-            pass
-        except Exception as e:
-            exit()
-            pass
-        else:
-            pass
-        finally:
-            pass
-        self.init_values = self.init_data.split(",")
+        #print("Get values inital values ")
+        for x in range(10):
+            try:
+                self.init_data = self.ser.readline().decode('utf-8')
+                self.init_values = self.init_data.split(",")
+                #print("Init settings end")
+                break
+            except Exception as e:
+                self.init_data = self.ser.readline().decode('utf-8')
+                self.init_values = self.init_data.split(",")
+                print("Error: ",e)
+                pass
+            else:
+                print("Get else")
+                pass
+            finally:
+                break
         #Set temperature display
-        prog.set_temp_slider.setValue(float(self.init_values[0]))
+        prog.set_temp_slider.setValue(int(float(self.init_values[0])))
         #Set air speed value
-        prog.fan_speed_slider.setValue(float(self.init_values[2]))
+        prog.fan_speed_slider.setValue(int(float(self.init_values[2])))
         #Set PID values
-        prog.pid_p_slider.setValue(float(self.init_values[4])*10)
-        prog.pid_i_slider.setValue(float(self.init_values[5])*10)
-        prog.pid_d_slider.setValue(float(self.init_values[6])*10)
+        prog.pid_p_slider.setValue(int(float(self.init_values[4])*10))
+        prog.pid_i_slider.setValue(int(float(self.init_values[5])*10))
+        prog.pid_d_slider.setValue(int(float(self.init_values[6])*10))
 
     def pid_p_slider(self):
         self.pid_p_value = prog.pid_p_slider.value()/10

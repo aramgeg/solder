@@ -202,7 +202,7 @@ class MyFirstGuiProgram(Ui_Dialog):
             self.comboBox.addItem(port)
         self.pushButton.clicked.connect(self.connect_serial_port)
         
-        self.widget = QtWidgets.QWidget(self.widget)
+        self.widget = QtWidgets.QWidget(self.plot_widget)
         self.widget.setGeometry(QtCore.QRect(10, 20, 351, 261))
         self.widget.setObjectName("widget")
         layout = QtWidgets.QVBoxLayout(self.widget)
